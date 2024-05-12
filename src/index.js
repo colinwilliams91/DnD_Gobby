@@ -1,6 +1,12 @@
-import { Client, IntentsBitField } from "discord.js";
+import { Client, Events, IntentsBitField } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
+
+import * as SYMBOLS from "./emojis.json" assert { type: "json" };;
+const emojis = SYMBOLS.values;
+
+import * as CHANNEL_IDS from "./dnd_channels.json" assert { type: "json" };
+const channel_ids = CHANNEL_IDS.values;
 
 /**
  * @description This array represents the categories of Events we want available to our Bot.
@@ -39,8 +45,11 @@ const client = new Client({
  * @description: for BOT API documentation
  */
 
-client.on("ready", (bot) => {
+client.once(Events.ClientReady, (bot) => {
   console.log(`✅ ${bot.options.rest.authPrefix} ${bot.user.tag} is online! Listening to channels: ${bot.channels}`);
+  channel_ids.forEach(element => {
+    console.log(element);
+  });
 });
 
 client.on("messageCreate", (message) => {
@@ -50,8 +59,10 @@ client.on("messageCreate", (message) => {
   /* message sent in server from any user: */
   console.log(`Discord message: "${message.content}" from User: ${message.author.username} at ${message.createdAt}`);
 
+  // if (message.channelId === )
   /* bot will react to any message sent with this emoji */
-  message.react('🤓');
+  var i = Math.random() * (9 - 1) + 1;
+  message.react(emojis[i]);
 });
 
 client.login(process.env.TOKEN);

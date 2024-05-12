@@ -2,10 +2,10 @@ import { Client, Events, IntentsBitField } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-import * as SYMBOLS from "./emojis.json" assert { type: "json" };;
+import SYMBOLS from "./emojis.js";
 const emojis = SYMBOLS.values;
 
-import * as CHANNEL_IDS from "./dnd_channels.json" assert { type: "json" };
+import CHANNEL_IDS from "./dnd_channels.js";
 const channel_ids = CHANNEL_IDS.values;
 
 /**
@@ -18,9 +18,9 @@ const channel_ids = CHANNEL_IDS.values;
  */
 const intentOptions = [
   IntentsBitField.Flags.Guilds,        // <-- server
-  IntentsBitField.Flags.GuildMembers,  // <-- members in server
-  IntentsBitField.Flags.GuildMessages, // <-- messages in server
-  IntentsBitField.Flags.MessageContent // <-- messages content
+  // IntentsBitField.Flags.GuildMembers,  // <-- members in server
+  // IntentsBitField.Flags.GuildMessages, // <-- messages in server
+  // IntentsBitField.Flags.MessageContent // <-- messages content
 ];
 
 /**
@@ -46,10 +46,17 @@ const client = new Client({
  */
 
 client.once(Events.ClientReady, (bot) => {
-  console.log(`✅ ${bot.options.rest.authPrefix} ${bot.user.tag} is online! Listening to channels: ${bot.channels}`);
-  channel_ids.forEach(element => {
-    console.log(element);
-  });
+  console.log(`✅ ${bot.options.rest.authPrefix} ${bot.user.tag} is online!`);
+
+  console.log(`✅ Listening to bot.channels:`)
+  for (const key in bot.channels) {
+    console.log(`- Key: ${key}`);
+    console.log(`- Value: ${bot.channels[key]}`);
+  }
+
+  // channel_ids.forEach(element => {
+  //   console.log(element);
+  // });
 });
 
 client.on("messageCreate", (message) => {

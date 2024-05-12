@@ -59,10 +59,12 @@ client.on("messageCreate", (message) => {
   /* message sent in server from any user: */
   console.log(`Discord message: "${message.content}" from User: ${message.author.username} at ${message.createdAt}`);
 
-  // if (message.channelId === )
-  /* bot will react to any message sent with this emoji */
-  var i = Math.random() * (9 - 1) + 1;
-  message.react(emojis[i]);
+  if (channel_ids.contains(message.channelId)) {
+    /* bot will react to any message sent with this emoji */
+    var i = Math.random() * (9 - 1) + 1;
+    message.react(emojis[i]);
+  }
+
 });
 
 client.login(process.env.TOKEN);

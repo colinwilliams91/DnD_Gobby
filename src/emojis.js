@@ -1,4 +1,4 @@
-{
+export const SYMBOLS = {
     "wizard_m": "🧙‍♂️",
     "wizard_f": "🧙‍♀️",
     "fairy_m": "🧚‍♂️",
@@ -8,4 +8,6 @@
     "jinn_m": "🧞‍♂️",
     "jinn_f": "🧞‍♀️",
     "bow": "🏹"
-}
+};
+
+export default SYMBOLS;

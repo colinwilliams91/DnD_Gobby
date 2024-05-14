@@ -1,3 +1,4 @@
+import express from "express";
 import { Client, Events, REST, Routes, IntentsBitField } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -64,7 +65,7 @@ const client = new Client({
  */
 
 client.once(Events.ClientReady, (bot) => {
-  console.log(`✅ ${bot.options.rest.authPrefix} ${bot.user.tag} is online!`);
+  console.log("\x1b[32m%s\x1b[0m", `✅ ${bot.options.rest.authPrefix} ${bot.user.tag} is online!`);
 
   console.log(`✅ Listening to bot.channels:`)
   for (const key in bot.channels) {
@@ -109,3 +110,12 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.login(process.env.TOKEN);
+
+const port = 8080;
+
+const server = express();
+
+server.listen(port, () => {
+  console.log("\x1b[34m%s\x1b[0m", `Server is listening for events at: http://localhost:${port}`);
+  console.log("Press Ctrl + C to quit.");
+});

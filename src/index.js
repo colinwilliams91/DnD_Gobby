@@ -1,12 +1,29 @@
-import { Client, Events, IntentsBitField } from "discord.js";
+import { Client, Events, REST, Routes, IntentsBitField } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 import SYMBOLS from "./emojis.js";
-const emojis = SYMBOLS.values;
+const emojis = SYMBOLS;
 
 import CHANNEL_IDS from "./dnd_channels.js";
-const channel_ids = CHANNEL_IDS.values;
+const channel_ids = CHANNEL_IDS;
+
+
+const commands = [ { name: "ping", description: "Replies with Pong!" } ];
+
+const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+const appCommandsRoute = Routes.applicationCommands(process.env.APPLICATION_ID);
+
+try {
+  console.log("Started refreshing application (/) commands.");
+
+  await rest.put(appCommandsRoute, { body: commands });
+
+  console.log("Successfully reloaded application (/) commands.");
+} catch (error) {
+
+  console.error(error);
+}
 
 /**
  * @description This array represents the categories of Events we want available to our Bot.
@@ -19,7 +36,8 @@ const channel_ids = CHANNEL_IDS.values;
 const intentOptions = [
   IntentsBitField.Flags.Guilds,        // <-- server
   // IntentsBitField.Flags.GuildMembers,  // <-- members in server
-  // IntentsBitField.Flags.GuildMessages, // <-- messages in server
+  IntentsBitField.Flags.GuildMessages, // <-- messages in server
+  IntentsBitField.Flags.GuildMessageReactions,
   // IntentsBitField.Flags.MessageContent // <-- messages content
 ];
 
@@ -57,21 +75,34 @@ client.once(Events.ClientReady, (bot) => {
   // channel_ids.forEach(element => {
   //   console.log(element);
   // });
+
+  // emojis.forEach(element => {
+  //   console.log(element);
+  // });
 });
 
-client.on("messageCreate", (message) => {
+client.on(Events.MessageCreate, (message) => {
   /* this validation disallows bots from responding to each other/themselves, remove at your own risk 💀 */
   if (message.author.bot) return;
+  console.log(message);
 
   /* message sent in server from any user: */
   console.log(`Discord message: "${message.content}" from User: ${message.author.username} at ${message.createdAt}`);
 
-  if (channel_ids.contains(message.channelId)) {
+  if (channel_ids.includes(message.channelId)) {
     /* bot will react to any message sent with this emoji */
-    var i = Math.random() * (9 - 1) + 1;
+    var i = Math.floor(Math.random() * (9 - 1) + 1);
     message.react(emojis[i]);
   }
 
+});
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === 'ping') {
+    await interaction.reply('Pong!');
+  }
 });
 
 client.login(process.env.TOKEN);

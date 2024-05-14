@@ -2,14 +2,14 @@ import { Client, Events, REST, Routes, IntentsBitField } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-import SYMBOLS from "./emojis.js";
+import SYMBOLS from "./data/emojis.js";
 const emojis = SYMBOLS;
 
-import CHANNEL_IDS from "./dnd_channels.js";
+import CHANNEL_IDS from "./data/dnd_channels.js";
 const channel_ids = CHANNEL_IDS;
 
 
-const commands = [ { name: "ping", description: "Replies with Pong!" } ];
+const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 const appCommandsRoute = Routes.applicationCommands(process.env.APPLICATION_ID);
@@ -97,11 +97,14 @@ client.on(Events.MessageCreate, (message) => {
 
 });
 
-client.on('interactionCreate', async interaction => {
+client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
+
+  console.log(interaction);
 
   if (interaction.commandName === 'ping') {
     await interaction.reply('Pong!');
+    // await interaction.member.setNickname
   }
 });
 

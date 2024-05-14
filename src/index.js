@@ -105,6 +105,10 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.commandName === 'ping') {
     await interaction.reply('Pong!');
     // await interaction.member.setNickname
+    // Set a nickname for a guild member
+    // guildMember.setNickname('cool nickname', 'Needed a new nickname')
+    // .then(member => console.log(`Set nickname of ${member.user.username}`))
+    // .catch(console.error);
   }
 });
 

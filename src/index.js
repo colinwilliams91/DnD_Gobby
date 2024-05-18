@@ -8,11 +8,11 @@ const emojis = SYMBOLS;
 import CHANNEL_IDS from "./data/dnd_channels.js";
 const channel_ids = CHANNEL_IDS;
 
-
 const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 const appCommandsRoute = Routes.applicationCommands(process.env.APPLICATION_ID);
+const prefix = process.env.CMD_PRE;
 
 try {
   console.log("Started refreshing application (/) commands.");
@@ -110,6 +110,8 @@ client.on('interactionCreate', async (interaction) => {
     // .then(member => console.log(`Set nickname of ${member.user.username}`))
     // .catch(console.error);
   }
+
+
 });
 
 client.login(process.env.TOKEN);

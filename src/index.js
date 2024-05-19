@@ -2,7 +2,7 @@
 /////////////// CONFIG ///////////////////////////////////////
 
 import { performance } from "perf_hooks";
-import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder, SlashCommandBuilder, Collection } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -61,6 +61,8 @@ const intentOptions = [
 const client = new Client({
   intents: intentOptions
 });
+
+client.commands = new Collection();
 
 //////////////////////////////////////////////////////////////
 /////////////// REGISTER /////////////////////////////////////

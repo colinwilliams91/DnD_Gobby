@@ -1,18 +1,40 @@
-import { Client, Events, REST, Routes, IntentsBitField } from "discord.js";
+//////////////////////////////////////////////////////////////
+/////////////// CONFIG ///////////////////////////////////////
+
+import { performance } from "perf_hooks";
+import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-import SYMBOLS from "./data/emojis.js";
-const emojis = SYMBOLS;
+//////////////////////////////////////////////////////////////
+//////////////// DATA ////////////////////////////////////////
 
+import SYMBOLS from "./data/emojis.js";
 import CHANNEL_IDS from "./data/dnd_channels.js";
+
+const emojis = SYMBOLS;
 const channel_ids = CHANNEL_IDS;
 
-const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
+//////////////////////////////////////////////////////////////
+///////////////// VARS ///////////////////////////////////////
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 const appCommandsRoute = Routes.applicationCommands(process.env.APPLICATION_ID);
 const prefix = process.env.CMD_PRE;
+
+//////////////////////////////////////////////////////////////
+///////////////// API ////////////////////////////////////////
+
+import { Utils } from "./utils.js";
+import { EventHandlers } from "./handlers.js";
+
+const _utils = new Utils(emojis, performance);
+const _handlers = new EventHandlers(emojis, _utils);
+
+const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
+
+//////////////////////////////////////////////////////////////
+//////////////// EVENTS //////////////////////////////////////
 
 try {
   console.log("Started refreshing application (/) commands.");
@@ -26,11 +48,6 @@ try {
 }
 
 /**
- * @description This array represents the categories of Events we want available to our Bot.
- * @argument: `IntentsBitField.Flags.Guilds`
- * @satisfies Intents with "Guilds" flags facilitates Server access
- * @argument: `IntentsBitField.Flags.MessageContent`
- * @satisfies "MessageContent" permits your app to receive message content data across the APIs.
  * @see https://discord.com/developers/docs/topics/gateway#message-content-intent
  */
 const intentOptions = [
@@ -41,22 +58,12 @@ const intentOptions = [
   // IntentsBitField.Flags.MessageContent // <-- messages content
 ];
 
-/**
- * @class: `Client` from discord.js
- * @instance: `client` is our Bot instance
- * @argument: must take in an options object with `intents` array, all other properties are optional
- *
- * @method: `.on("event" callback)` for bot event handling
- */
 const client = new Client({
   intents: intentOptions
 });
 
-/**
- *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * ^^^^^^^^^^ EVENT LISTENERS ^^^^^^^^^^
- *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- */
+//////////////////////////////////////////////////////////////
+/////////////// REGISTER /////////////////////////////////////
 
 /**
  * @see https://old.discordjs.dev/#/docs/discord.js/main/general/welcome
@@ -72,27 +79,26 @@ client.once(Events.ClientReady, (bot) => {
     console.log(`- Value: ${bot.channels[key]}`);
   }
 
-  // channel_ids.forEach(element => {
-  //   console.log(element);
-  // });
-
-  // emojis.forEach(element => {
-  //   console.log(element);
-  // });
 });
 
 client.on(Events.MessageCreate, (message) => {
   /* this validation disallows bots from responding to each other/themselves, remove at your own risk 💀 */
-  if (message.author.bot) return;
-  console.log(message);
+  if (!message.content.startsWith(prefix) || message.author.bot) {
+    console.error(`message missing correct server prefix: ${prefix} - message: ${message}`);
+    return;
+  }
 
   /* message sent in server from any user: */
   console.log(`Discord message: "${message.content}" from User: ${message.author.username} at ${message.createdAt}`);
 
+  /* bot will react to any message sent provided channel ids */
   if (channel_ids.includes(message.channelId)) {
-    /* bot will react to any message sent with this emoji */
-    var i = Math.floor(Math.random() * (9 - 1) + 1);
-    message.react(emojis[i]);
+    _handlers.reactToMessage(message);
+  }
+
+  /* performance and payload loggers */
+  if (process.env.NODE_ENV === "development") {
+    _handlers.logMessage(message);
   }
 
 });

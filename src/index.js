@@ -31,21 +31,25 @@ import { EventHandlers } from "./handlers.js";
 const _utils = new Utils(emojis, performance);
 const _handlers = new EventHandlers(emojis, _utils, EmbedBuilder);
 
-const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
+// const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
+import commands from "./commands.js";
 
 //////////////////////////////////////////////////////////////
 //////////////// EVENTS //////////////////////////////////////
 
-try {
-  console.log("Started refreshing application (/) commands.");
+/* deploy commands IIFE */
+(async () => {
+  try {
+    console.log("Started refreshing application (/) commands.");
 
-  await rest.put(appCommandsRoute, { body: commands });
+    await rest.put(appCommandsRoute, { body: commands });
 
-  console.log("Successfully reloaded application (/) commands.");
-} catch (error) {
+    console.log("Successfully reloaded application (/) commands.");
+  } catch (error) {
 
-  console.error(error);
-}
+    console.error(error);
+  }
+})();
 
 /**
  * @see https://discord.com/developers/docs/topics/gateway#message-content-intent
@@ -105,20 +109,23 @@ client.on(Events.MessageCreate, (message) => {
 
 });
 
-client.on('interactionCreate', async (interaction) => {
+client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  console.log(interaction);
+  // console.log(interaction);
 
   if (interaction.commandName === 'ping') {
-    await interaction.reply('Pong!');
+    await interaction.reply('pong!');
+  } else if (interaction.commandName === 'test') {
+    interaction.channel.send("test!");
+  }
+
+  // TODO:
     // await interaction.member.setNickname
     // Set a nickname for a guild member
     // guildMember.setNickname('cool nickname', 'Needed a new nickname')
     // .then(member => console.log(`Set nickname of ${member.user.username}`))
     // .catch(console.error);
-  }
-
 
 });
 

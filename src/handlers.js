@@ -2,10 +2,12 @@ export class EventHandlers {
 
     _emojis;
     _utils;
+    _embedBuilder;
 
-    constructor(emojis, utils) {
+    constructor(emojis, utils, embedBuilder) {
         this._emojis = emojis;
         this._utils = utils;
+        this._embedBuilder = embedBuilder;
     }
 
     updateUserNickname = async (message, prefix) => {

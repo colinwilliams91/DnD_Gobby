@@ -29,7 +29,7 @@ import { Utils } from "./utils.js";
 import { EventHandlers } from "./handlers.js";
 
 const _utils = new Utils(emojis, performance);
-const _handlers = new EventHandlers(emojis, _utils);
+const _handlers = new EventHandlers(emojis, _utils, EmbedBuilder);
 
 const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
 

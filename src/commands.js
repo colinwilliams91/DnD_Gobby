@@ -15,13 +15,31 @@ export const commands = [
 
 const responses = new Collection();
 
+//////////////////////////////////////////////////////////////
+///////////////// ping ///////////////////////////////////////
+/**
+ * @summary /ping
+ * @description test route responds "pong"
+ */
 responses.set(commands[0].name, async (interaction) => await interaction.reply('pong!'));
 
+//////////////////////////////////////////////////////////////
+///////////////// name ///////////////////////////////////////
+/**
+ * @summary /name arg
+ * @description user input arg (char name) appends to original user nickname
+ */
 responses.set(commands[1].name, async (interaction) => {
-    const name = interaction.options.getString("name");
-    // const target = interaction.guild.members.fetch(name);
+    const input = interaction.options.getString("name");
+    const orig = interaction.member.nickname;
+    const id = interaction.member.user.id;
 
-    interaction.member.setNickname(name, 'Needed a new nickname')
+    const name = `${orig} [${input}]`;
+
+    /* cache user's orig name by user id */
+    if (!users[id]) users[id] = orig;
+
+    interaction.member.setNickname(name, "Append user's character name")
         .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
         .catch(console.error);
 
@@ -30,7 +48,36 @@ responses.set(commands[1].name, async (interaction) => {
     await interaction.channel.send(`Hello ${name}! ${_utils.getRandomEmoji()}`);
 });
 
-responses.set(commands[2].name, async (interaction) => {});
+//////////////////////////////////////////////////////////////
+///////////////// clear //////////////////////////////////////
+/**
+ * @summary /clear
+ * @description resets user nickname to original
+ */
+responses.set(commands[2].name, async (interaction) => {
+    let orig = "";
+    const id = interaction.member.user.id;
 
+    if (users[id]) {
+        orig = users[id];
+
+    } else if (interaction.member.nickname) {
+        orig = interaction.member.nickname;
+
+    } else if (interaction.member.user.displayName) {
+        orig = interaction.member.user.displayName;
+
+    } else {
+        orig = interaction.member.user.globalName;
+
+    }
+
+    interaction.member.setNickname(orig, "Reset user's nickname")
+        .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
+        .catch(console.error);
+
+    await interaction.channel.send(`See you next time ${orig}! ${_utils.getRandomEmoji()}`);
+
+});
 
 export const api = responses;

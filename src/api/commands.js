@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, Collection, PermissionFlagsBits } from "discord.js";
 import { _utils } from "../index.js";
 import users from "../data/users.js";
+import { sendEmbed } from "./embeds.js";
 
 // TODO: Make this into API Controller/Class?
 
@@ -18,7 +19,10 @@ const responses = new Collection();
  * @summary /ping
  * @description test route responds "pong"
  */
-responses.set(commands[0].name, async (interaction) => await interaction.reply('pong!'));
+responses.set(commands[0].name, async (interaction) => {
+    await interaction.reply('pong!')
+    sendEmbed(interaction);
+});
 
 //////////////////////////////////////////////////////////////
 ///////////////// name ///////////////////////////////////////

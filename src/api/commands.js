@@ -1,6 +1,8 @@
 import { SlashCommandBuilder, Collection, PermissionFlagsBits } from "discord.js";
-import { _utils } from "./index.js";
-import users from "./data/users.js";
+import { _utils } from "../index.js";
+import users from "../data/users.js";
+
+// TODO: Make this into API Controller/Class?
 
 export const commands = [
     new SlashCommandBuilder().setName("ping").setDescription("Replies with Pong!"),

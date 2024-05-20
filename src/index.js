@@ -24,13 +24,13 @@ const prefix = process.env.CMD_PRE;
 //////////////////////////////////////////////////////////////
 ///////////////// API ////////////////////////////////////////
 
-import { Utils } from "./utils.js";
-import { EventHandlers } from "./handlers.js";
+import { Utils } from "./utility/utils.js";
+import { EventHandlers } from "./api/handlers.js";
 
 export const _utils = new Utils(emojis, performance);
 const _handlers = new EventHandlers(emojis, _utils, EmbedBuilder);
 
-import { commands, api } from "./commands.js";
+import { commands, api } from "./api/commands.js";
 
 //////////////////////////////////////////////////////////////
 //////////////// EVENTS //////////////////////////////////////

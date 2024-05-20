@@ -24,7 +24,7 @@ const prefix = process.env.CMD_PRE;
 //////////////////////////////////////////////////////////////
 ///////////////// API ////////////////////////////////////////
 
-import { Utils } from "./utility/utils.js";
+import { Utils } from "./utility/index.js";
 import { EventHandlers } from "./api/handlers.js";
 
 export const _utils = new Utils(emojis, performance);

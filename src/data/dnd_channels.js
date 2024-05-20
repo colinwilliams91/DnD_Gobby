@@ -1,4 +1,4 @@
-export const CHANNEL_IDS = [
+const CHANNEL_IDS = [
     "768827884520472597", // "reaction-role-testing":
     "559499867047591948", // "campaign_i":
     "1237154023476559972", // "map_art_screenshots":

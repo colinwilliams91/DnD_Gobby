@@ -28,11 +28,10 @@ const prefix = process.env.CMD_PRE;
 import { Utils } from "./utils.js";
 import { EventHandlers } from "./handlers.js";
 
-const _utils = new Utils(emojis, performance);
+export const _utils = new Utils(emojis, performance);
 const _handlers = new EventHandlers(emojis, _utils, EmbedBuilder);
 
-// const commands = [ { name: "ping", description: "Replies with Pong!", options: {} } ];
-import commands from "./commands.js";
+import { commands, responses } from "./commands.js";
 
 //////////////////////////////////////////////////////////////
 //////////////// EVENTS //////////////////////////////////////
@@ -66,7 +65,7 @@ const client = new Client({
   intents: intentOptions
 });
 
-client.commands = new Collection();
+client.commands = responses;
 
 //////////////////////////////////////////////////////////////
 /////////////// REGISTER /////////////////////////////////////
@@ -114,11 +113,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   // console.log(interaction);
 
-  if (interaction.commandName === 'ping') {
-    await interaction.reply('pong!');
-  } else if (interaction.commandName === 'test') {
-    interaction.channel.send("test!");
-  }
+  const command = client.commands.get(interaction.commandName);
+
+  command(interaction);
 
   // TODO:
     // await interaction.member.setNickname

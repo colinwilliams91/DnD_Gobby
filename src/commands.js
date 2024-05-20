@@ -2,11 +2,6 @@ import { SlashCommandBuilder, Collection, PermissionFlagsBits } from "discord.js
 import { _utils } from "./index.js";
 import users from "./data/users.js";
 
-/**
- * @abstract array of commands
- * @generator `SlashCommandBuilder` - A builder that creates API-compatible JSON data for slash commands.
- * @example old commands API: `{ name: "", description: "", options: {} }`
- */
 export const commands = [
     new SlashCommandBuilder().setName("ping").setDescription("Replies with Pong!"),
     new SlashCommandBuilder().setName("name").setDescription("Append your character name to your username!").addStringOption(x => x.setName("name").setDescription("should be able to name nick")),

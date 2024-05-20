@@ -2,18 +2,17 @@
 /////////////// CONFIG ///////////////////////////////////////
 
 import { performance } from "perf_hooks";
-import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder, SlashCommandBuilder, Collection } from "discord.js";
+import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 //////////////////////////////////////////////////////////////
 //////////////// DATA ////////////////////////////////////////
 
-import SYMBOLS from "./data/emojis.js";
-import CHANNEL_IDS from "./data/dnd_channels.js";
+import { DATA } from "./data/index.js";
 
-const emojis = SYMBOLS;
-const channel_ids = CHANNEL_IDS;
+const emojis = DATA.SYMBOLS;
+const channel_ids = DATA.CHANNEL_IDS;
 
 //////////////////////////////////////////////////////////////
 ///////////////// VARS ///////////////////////////////////////
@@ -31,7 +30,7 @@ import { EventHandlers } from "./handlers.js";
 export const _utils = new Utils(emojis, performance);
 const _handlers = new EventHandlers(emojis, _utils, EmbedBuilder);
 
-import { commands, responses } from "./commands.js";
+import { commands, api } from "./commands.js";
 
 //////////////////////////////////////////////////////////////
 //////////////// EVENTS //////////////////////////////////////
@@ -65,7 +64,7 @@ const client = new Client({
   intents: intentOptions
 });
 
-client.commands = responses;
+client.commands = api;
 
 //////////////////////////////////////////////////////////////
 /////////////// REGISTER /////////////////////////////////////
@@ -88,10 +87,7 @@ client.once(Events.ClientReady, (bot) => {
 
 client.on(Events.MessageCreate, (message) => {
   /* this validation disallows bots from responding to each other/themselves, remove at your own risk 💀 */
-  if (!message.content.startsWith(prefix) || message.author.bot) {
-    console.error(`message missing correct server prefix: ${prefix} - message: ${message}`);
-    return;
-  }
+  if (message.author.bot) return;
 
   /* message sent in server from any user: */
   console.log(`Discord message: "${message.content}" from User: ${message.author.username} at ${message.createdAt}`);
@@ -115,7 +111,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   const command = client.commands.get(interaction.commandName);
 
-  command(interaction);
+  // const target = interaction.guild.members.
+  // const target = interaction.member.displayName
+
+  await command(interaction);
 
   // TODO:
     // await interaction.member.setNickname

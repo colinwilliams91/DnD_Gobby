@@ -1,4 +1,4 @@
-const CHANNEL_IDS = [
+const IDs = [
     "768827884520472597", // "reaction-role-testing":
     "559499867047591948", // "campaign_i":
     "1237154023476559972", // "map_art_screenshots":
@@ -6,5 +6,11 @@ const CHANNEL_IDS = [
     "1238267954374639627", // "in_character_chat":
     "1239265493043380238" // "general": (t)
 ];
+
+const CHANNEL_IDS = new Map();
+
+IDs.forEach(id => {
+    CHANNEL_IDS.set(id, true);
+});
 
 export default CHANNEL_IDS;

@@ -87,15 +87,13 @@ client.once(Events.ClientReady, (bot) => {
 
 client.on(Events.MessageCreate, (message) => {
   /* this validation disallows bots from responding to each other/themselves, remove at your own risk 💀 */
-  if (message.author.bot) return;
+  if (message.author.bot || !channel_ids.get(message.channelId)) return;
 
   /* message sent in server from any user: */
   console.log(`Discord message: "${message.content}" from User: ${message.author.username} at ${message.createdAt}`);
 
   /* bot will react to any message sent provided channel ids */
-  if (channel_ids.includes(message.channelId)) {
-    _handlers.reactToMessage(message);
-  }
+  _handlers.reactToMessage(message);
 
   /* performance and payload loggers */
   if (process.env.NODE_ENV === "development") {

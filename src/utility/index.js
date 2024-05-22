@@ -9,6 +9,14 @@ export class Utils {
     }
 
     /**
+     * @summary deletes required ephemeral reply
+     */
+    handleBotReply = async (interaction) => {
+        await interaction.reply({ content: "3.. 2.. 1..", ephemeral: true });
+        await interaction.deleteReply();
+    };
+
+    /**
      * @returns a random emoji from src/data/emojis.js
      */
     getRandomEmoji = () => {

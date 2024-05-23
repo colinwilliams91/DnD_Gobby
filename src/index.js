@@ -6,6 +6,7 @@ import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder, Collection
 import dotenv from "dotenv";
 dotenv.config();
 
+
 //////////////////////////////////////////////////////////////
 //////////////// DATA ////////////////////////////////////////
 
@@ -14,11 +15,13 @@ import { USERS, SYMBOLS, CHANNEL_IDS, AVATARS } from "./data/index.js";
 const emojis = SYMBOLS;
 const channel_ids = CHANNEL_IDS;
 
+
 //////////////////////////////////////////////////////////////
 ///////////////// VARS ///////////////////////////////////////
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 const appCommandsRoute = Routes.applicationCommands(process.env.APPLICATION_ID);
+
 
 //////////////////////////////////////////////////////////////
 ///////////////// API ////////////////////////////////////////
@@ -30,6 +33,7 @@ export const _utils = new Utils(emojis, performance);
 const _handlers = new EventHandlers(emojis, _utils, EmbedBuilder);
 
 import { commands, configureResponses } from "./api/commands.js";
+
 
 //////////////////////////////////////////////////////////////
 //////////////// EVENTS //////////////////////////////////////
@@ -73,6 +77,7 @@ const client = new Client({
 const responses = new Collection();
 
 client.commands = configureResponses(responses);
+
 
 //////////////////////////////////////////////////////////////
 /////////////// REGISTER /////////////////////////////////////
@@ -130,7 +135,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.login(process.env.TOKEN);
 
-  // interaction.member.user.displayName
-  // interaction.member.user.globalName
-  // const target = interaction.guild.members.
-  // const target = interaction.member.displayName
+// interaction.member.user.displayName
+// interaction.member.user.globalName
+// const target = interaction.guild.members.
+// const target = interaction.member.displayName
+
+
+//////////////////////////////////////////////////////////////
+/////////////// ERRORS ///////////////////////////////////////
+
+process.on('unhandledRejection', error => {
+  console.error('Unhandled promise rejection:', error);
+});

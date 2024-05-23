@@ -4,6 +4,8 @@ import users from "../data/users.js";
 import { sendEmbed, sendSay } from "./embeds.js";
 
 // TODO: Make this into API Controller/Class?
+// TODO: Cache "current" map..
+// TODO: Make `/set arg...` route
 
 export const commands = [
     new SlashCommandBuilder().setName("ping").setDescription("Replies with Pong!"),

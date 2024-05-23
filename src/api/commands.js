@@ -8,77 +8,106 @@ import { sendEmbed } from "./embeds.js";
 export const commands = [
     new SlashCommandBuilder().setName("ping").setDescription("Replies with Pong!"),
     new SlashCommandBuilder().setName("name").setDescription("Append your character name to your username!").addStringOption(x => x.setName("name").setDescription("should be able to name nick")),
-    new SlashCommandBuilder().setName("clear").setDescription("Resets to original username.")
+    new SlashCommandBuilder().setName("clear").setDescription("Resets to original username."),
+    new SlashCommandBuilder().setName("say").setDescription("Type what you want your character to say:").addStringOption(x => x.setName("message").setDescription("content")),
 ];
 
-const responses = new Collection();
+// const responses = new Collection();
 
-//////////////////////////////////////////////////////////////
-///////////////// ping ///////////////////////////////////////
-/**
- * @summary /ping
- * @description test route responds "pong"
- */
-responses.set(commands[0].name, async (interaction) => {
-    await interaction.reply('pong!')
-    sendEmbed(interaction);
-});
+export const configureResponses = (responses) => {
 
-//////////////////////////////////////////////////////////////
-///////////////// name ///////////////////////////////////////
-/**
- * @summary /name arg
- * @description user input arg (char name) appends to original user nickname
- */
-responses.set(commands[1].name, async (interaction) => {
-    const input = interaction.options.getString("name");
-    const orig = interaction.member.nickname;
-    const id = interaction.member.user.id;
+    //////////////////////////////////////////////////////////////
+    ///////////////// ping ///////////////////////////////////////
+    /**
+     * @summary /ping
+     * @description test route responds "pong"
+     */
+    responses.set(commands[0].name, async (interaction) => {
+        // await interaction.reply('pong!')
+        try {
 
-    const name = `${orig} [${input}]`;
+            await sendEmbed(interaction);
+            await _utils.handleBotReply(interaction);
+        } catch (error) {
 
-    /* cache user's orig name by user id */
-    if (!users[id]) users[id] = orig;
+            console.error(error);
+        }
+    });
 
-    interaction.member.setNickname(name, "Append user's character name")
-        .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
-        .catch(console.error);
+    //////////////////////////////////////////////////////////////
+    ///////////////// name ///////////////////////////////////////
+    /**
+     * @summary /name arg
+     * @description user input arg (char name) appends to original user nickname
+     */
+    responses.set(commands[1].name, async (interaction) => {
+        const input = interaction.options.getString("name");
+        const orig = interaction.member.nickname;
+        const id = interaction.member.user.id;
 
-    console.log("~~TEST HERE~~");
-    console.log(name);
-    await interaction.channel.send(`Hello ${name}! ${_utils.getRandomEmoji()}`);
-});
+        const name = `${orig} [${input}]`;
 
-//////////////////////////////////////////////////////////////
-///////////////// clear //////////////////////////////////////
-/**
- * @summary /clear
- * @description resets user nickname to original
- */
-responses.set(commands[2].name, async (interaction) => {
-    let orig = "";
-    const id = interaction.member.user.id;
+        /* cache user's orig name by user id */
+        if (!users[id]) users[id] = orig;
 
-    if (users[id]) {
-        orig = users[id];
+        interaction.member.setNickname(name, "Append user's character name")
+            .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
+            .catch(console.error);
 
-    } else if (interaction.member.nickname) {
-        orig = interaction.member.nickname;
+        console.log("~~TEST HERE~~");
+        console.log(name);
+        await interaction.channel.send(`Hello ${name}! ${_utils.getRandomEmoji()}`);
+        await _utils.handleBotReply(interaction);
+    });
 
-    } else if (interaction.member.user.displayName) {
-        orig = interaction.member.user.displayName;
+    //////////////////////////////////////////////////////////////
+    ///////////////// clear //////////////////////////////////////
+    /**
+     * @summary /clear
+     * @description resets user nickname to original
+     */
+    responses.set(commands[2].name, async (interaction) => {
+        let orig = "";
+        const id = interaction.member.user.id;
 
-    } else {
-        orig = interaction.member.user.globalName;
+        if (users[id]) {
+            orig = users[id];
 
-    }
+        } else if (interaction.member.nickname) {
+            orig = interaction.member.nickname;
 
-    interaction.member.setNickname(orig, "Reset user's nickname")
-        .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
-        .catch(console.error);
+        } else if (interaction.member.user.displayName) {
+            orig = interaction.member.user.displayName;
 
-    await interaction.channel.send(`See you next time ${orig}! ${_utils.getRandomEmoji()}`);
+        } else {
+            orig = interaction.member.user.globalName;
 
-});
+        }
 
-export const api = responses;
+        interaction.member.setNickname(orig, "Reset user's nickname")
+            .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
+            .catch(console.error);
+
+        await interaction.channel.send(`See you next time ${orig}! ${_utils.getRandomEmoji()}`);
+        await _utils.handleBotReply(interaction);
+    });
+
+    //////////////////////////////////////////////////////////////
+    ///////////////// say ////////////////////////////////////////
+    /**
+     * @summary /say
+     * @description speaks arg as user's character
+     */
+    responses.set(commands[3].name, async (interaction) => {
+        const input = interaction.options.getString("name");
+        await interaction.channel.send(input);
+        // await sendSay(interaction);
+        await _utils.handleBotReply(interaction);
+    });
+
+    return responses;
+};
+
+
+
+// export const api = responses;

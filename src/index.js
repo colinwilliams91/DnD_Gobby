@@ -2,24 +2,23 @@
 /////////////// CONFIG ///////////////////////////////////////
 
 import { performance } from "perf_hooks";
-import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder } from "discord.js";
+import { Client, Events, REST, Routes, IntentsBitField, EmbedBuilder, Collection } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 //////////////////////////////////////////////////////////////
 //////////////// DATA ////////////////////////////////////////
 
-import { DATA } from "./data/index.js";
+import { USERS, SYMBOLS, CHANNEL_IDS, AVATARS } from "./data/index.js";
 
-const emojis = DATA.SYMBOLS;
-const channel_ids = DATA.CHANNEL_IDS;
+const emojis = SYMBOLS;
+const channel_ids = CHANNEL_IDS;
 
 //////////////////////////////////////////////////////////////
 ///////////////// VARS ///////////////////////////////////////
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 const appCommandsRoute = Routes.applicationCommands(process.env.APPLICATION_ID);
-const prefix = process.env.CMD_PRE;
 
 //////////////////////////////////////////////////////////////
 ///////////////// API ////////////////////////////////////////
@@ -30,7 +29,7 @@ import { EventHandlers } from "./api/handlers.js";
 export const _utils = new Utils(emojis, performance);
 const _handlers = new EventHandlers(emojis, _utils, EmbedBuilder);
 
-import { commands, api } from "./api/commands.js";
+import { commands, configureResponses } from "./api/commands.js";
 
 //////////////////////////////////////////////////////////////
 //////////////// EVENTS //////////////////////////////////////
@@ -38,11 +37,18 @@ import { commands, api } from "./api/commands.js";
 /* deploy commands IIFE */
 (async () => {
   try {
-    console.log("Started refreshing application (/) commands.");
+    console.log("...Started refreshing application (/) commands.");
 
-    await rest.put(appCommandsRoute, { body: commands });
+    if (process.env.NODE_ENV === "clear") {
 
-    console.log("Successfully reloaded application (/) commands.");
+      await rest.put(appCommandsRoute, { body: [] });
+      console.log("❌ Resetting application (/) commands...");
+    } else {
+
+      await rest.put(appCommandsRoute, { body: commands });
+      console.log("✅ Successfully reloaded application (/) commands.");
+    }
+
   } catch (error) {
 
     console.error(error);
@@ -64,7 +70,9 @@ const client = new Client({
   intents: intentOptions
 });
 
-client.commands = api;
+const responses = new Collection();
+
+client.commands = configureResponses(responses);
 
 //////////////////////////////////////////////////////////////
 /////////////// REGISTER /////////////////////////////////////
@@ -89,40 +97,40 @@ client.on(Events.MessageCreate, (message) => {
   /* this validation disallows bots from responding to each other/themselves, remove at your own risk 💀 */
   if (message.author.bot || !channel_ids.get(message.channelId)) return;
 
+  /* performance and payload loggers */
+  if (process.env.NODE_ENV === "logging") {
+    _handlers.logMessage(message);
+  }
+
   /* message sent in server from any user: */
-  console.log(`Discord message: "${message.content}" from User: ${message.author.username} at ${message.createdAt}`);
+  console.log(`📌Discord message in channel ID: "${message.channelId}" from User: ${message.author.username} at ${message.createdAt}`);
 
   /* bot will react to any message sent provided channel ids */
   _handlers.reactToMessage(message);
 
-  /* performance and payload loggers */
-  if (process.env.NODE_ENV === "development") {
-    _handlers.logMessage(message);
-  }
 
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
+  console.log(interaction);
+  // console.log(interaction.commandName);
 
-  // console.log(interaction);
-  // interaction.member.user.displayName
-  // interaction.member.user.globalName
+  try {
 
-  const command = client.commands.get(interaction.commandName);
+    const command = client.commands.get(interaction.commandName);
+    await command(interaction);
+  } catch (error) {
 
-  // const target = interaction.guild.members.
-  // const target = interaction.member.displayName
-
-  await command(interaction);
-
-  // TODO:
-    // await interaction.member.setNickname
-    // Set a nickname for a guild member
-    // guildMember.setNickname('cool nickname', 'Needed a new nickname')
-    // .then(member => console.log(`Set nickname of ${member.user.username}`))
-    // .catch(console.error);
+    console.error(error);
+  }
 
 });
 
+
 client.login(process.env.TOKEN);
+
+  // interaction.member.user.displayName
+  // interaction.member.user.globalName
+  // const target = interaction.guild.members.
+  // const target = interaction.member.displayName

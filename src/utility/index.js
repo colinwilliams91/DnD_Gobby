@@ -16,6 +16,21 @@ export class Utils {
         await interaction.deleteReply();
     };
 
+    handleUserError = async (errMsg, interaction) => {
+      await interaction.reply({ content: errMsg, ephemeral: true });
+    };
+
+    /**
+     * @param {string} str full discord user name
+     * @returns the extracted character name ("nickname") for the user
+     */
+    extractNickname(str) {
+      const match = str.match(/\[([^\]]+)\]/);
+      console.log(match);
+      console.log("INSIDE EXTRACT NICKNAME HELPER");
+        return match ? match[1] : undefined;
+    };
+
     /**
      * @returns a random emoji from src/data/emojis.js
      */

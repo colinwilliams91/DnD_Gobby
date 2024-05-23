@@ -20,6 +20,7 @@ export const configureResponses = (responses) => {
 
     //////////////////////////////////////////////////////////////
     ///////////////// ping ///////////////////////////////////////
+
     /**
      * @summary /ping
      * @description test route responds "pong"
@@ -38,6 +39,7 @@ export const configureResponses = (responses) => {
 
     //////////////////////////////////////////////////////////////
     ///////////////// name ///////////////////////////////////////
+
     /**
      * @summary /name arg
      * @description user input arg (char name) appends to original user nickname
@@ -64,6 +66,7 @@ export const configureResponses = (responses) => {
 
     //////////////////////////////////////////////////////////////
     ///////////////// clear //////////////////////////////////////
+
     /**
      * @summary /clear
      * @description resets user nickname to original
@@ -96,15 +99,13 @@ export const configureResponses = (responses) => {
 
     //////////////////////////////////////////////////////////////
     ///////////////// say ////////////////////////////////////////
+
     /**
      * @summary /say
      * @description speaks arg as user's character
      */
     responses.set(commands[3].name, async (interaction) => {
-        const input = interaction.options.getString("message");
-        await interaction.channel.send(input);
         await sendSay(interaction);
-        // await sendSay(interaction);
         await _utils.handleBotReply(interaction);
     });
 

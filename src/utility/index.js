@@ -16,6 +16,11 @@ export class Utils {
         await interaction.deleteReply();
     };
 
+    /**
+     * @summary pass in ERRORS.MESSAGE as string for modular response for bot on User input error
+     * @param {string} errMsg
+     * @param {object} interaction
+     */
     handleUserError = async (errMsg, interaction) => {
       await interaction.reply({ content: errMsg, ephemeral: true });
     };
@@ -26,9 +31,7 @@ export class Utils {
      */
     extractNickname(str) {
       const match = str.match(/\[([^\]]+)\]/);
-      console.log(match);
-      console.log("INSIDE EXTRACT NICKNAME HELPER");
-        return match ? match[1] : undefined;
+      return match ? match[1] : undefined;
     };
 
     /**

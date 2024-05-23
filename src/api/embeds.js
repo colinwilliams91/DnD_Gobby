@@ -1,4 +1,5 @@
 import { EmbedBuilder } from "discord.js";
+import { _utils } from "../index.js";
 import { AVATARS, LOCATIONS } from "../data/index.js";
 
 
@@ -30,19 +31,28 @@ export const sendEmbed = async (interaction) => {
 };
 
 export const sendSay = async (interaction) => {
+    const charName = _utils.extractNickname(interaction.member.nickName);
+    const charAvatar = AVATARS.get(charName) ? AVATARS.get(charName) : undefined;
+
+    // TODO: once ALL users have Character/Avatars stored in code, then use this...
+    // if (charAvatar === undefined) {
+    //     await interaction.reply({ content: "Character name invalid. Please try again.", ephemeral: true });
+    //     return;
+    // }
+
     const sayEmbed = new EmbedBuilder()
-        .setColor(0x0099FF)
+        .setColor(0x00CC00)
         // .setTitle("Some title")
         // .setURL("https://discord.js.org/")
-        .setAuthor({ name: "DnD_Gobby", iconURL: AVATARS.get("Bot") })
+        .setAuthor({ name: charName, iconURL: AVATARS.get("Bot") })
         .setDescription("Should this be the chat message?")
         .setThumbnail(AVATARS.get("Bot"))
-        .addFields(
-            { name: "Regular field title", value: "Some value here" },
+        // .addFields(
+            // { name: "Regular field title", value: "Some value here" },
             // { name: "\u200B", value: "\u200B" },
             // { name: "Inline field title", value: "Some value here", inline: true },
             // { name: "Inline field title", value: "Some value here", inline: true },
-        )
+        // )
         // .addFields({ name: "Inline field title", value: "Some value here", inline: true })
         .setImage(LOCATIONS.get("Crossroads"))
         .setTimestamp()

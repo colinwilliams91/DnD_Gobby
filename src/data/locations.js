@@ -4,4 +4,7 @@ LOCATIONS.set("Town", "https://res.cloudinary.com/dbdyc4klu/image/upload/v171634
 LOCATIONS.set("Tavern", "https://res.cloudinary.com/dbdyc4klu/image/upload/v1716346160/discord_dnd_bot/91f96c45d1ae3108c34fe1ddcbd01c56d4251618_2000x2000_xqmu1j.webp");
 LOCATIONS.set("Crossroads", "https://res.cloudinary.com/dbdyc4klu/image/upload/v1716346103/discord_dnd_bot/art-max-suleimanov-warrior-crossroads-field_txsk80.webp");
 
+/* Defaults to The Glimmerwood Map */
+LOCATIONS.set("Current", "https://res.cloudinary.com/dbdyc4klu/image/upload/v1716437459/discord_dnd_bot/Glimmerwood-Edit_h6fgn6.webp");
+
 export default LOCATIONS;

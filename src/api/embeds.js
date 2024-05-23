@@ -1,6 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { _utils } from "../index.js";
 import { AVATARS, LOCATIONS } from "../data/index.js";
+import { ERRORS } from "../errors/index.js";
 
 
 /**
@@ -31,29 +32,36 @@ export const sendEmbed = async (interaction) => {
 };
 
 export const sendSay = async (interaction) => {
-    const charName = _utils.extractNickname(interaction.member.nickName);
-    const charAvatar = AVATARS.get(charName) ? AVATARS.get(charName) : undefined;
+    const input = interaction.options.getString("message");
+
+    const charName = _utils.extractNickname(interaction.member.nickname);
+
+    // TODO: test error cases...
+    if (!charName) {
+        // await interaction.reply({ content: ERRORS.NO_NAME, ephemeral: true });
+        await _utils.handleUserError(ERRORS.NO_NAME, interaction);
+        return;
+    }
+
+    // TODO: handle null | undefined .member.avatar... currently placeholders Bot Avatar...
+    const charAvatar = AVATARS.get(charName)
+        ? AVATARS.get(charName)
+        : interaction.member.avatar
+            ? interaction.member.avatar
+            : AVATARS.get("Bot");
 
     // TODO: once ALL users have Character/Avatars stored in code, then use this...
-    // if (charAvatar === undefined) {
-    //     await interaction.reply({ content: "Character name invalid. Please try again.", ephemeral: true });
+    // const charAvatar = AVATARS.get(charName);
+    // if (!charAvatar) {
+    //     await _utils.handleUserError(ERRORS.NO_AVATAR, interaction);
     //     return;
     // }
 
     const sayEmbed = new EmbedBuilder()
         .setColor(0x00CC00)
-        // .setTitle("Some title")
-        // .setURL("https://discord.js.org/")
-        .setAuthor({ name: charName, iconURL: AVATARS.get("Bot") })
-        .setDescription("Should this be the chat message?")
+        .setAuthor({ name: charName, iconURL: charAvatar })
+        .setDescription(input)
         .setThumbnail(AVATARS.get("Bot"))
-        // .addFields(
-            // { name: "Regular field title", value: "Some value here" },
-            // { name: "\u200B", value: "\u200B" },
-            // { name: "Inline field title", value: "Some value here", inline: true },
-            // { name: "Inline field title", value: "Some value here", inline: true },
-        // )
-        // .addFields({ name: "Inline field title", value: "Some value here", inline: true })
         .setImage(LOCATIONS.get("Crossroads"))
         .setTimestamp()
         .setFooter({ text: "What should go here... the weather?", iconURL: AVATARS.get("Bot") });

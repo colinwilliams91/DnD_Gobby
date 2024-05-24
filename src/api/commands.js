@@ -106,6 +106,7 @@ export const configureResponses = (responses) => {
      */
     responses.set(commands[3].name, async (interaction) => {
         await sendSay(interaction);
+        /* TODO: in some cases interaction.reply has happened and is propagating up to this level... */
         await _utils.handleBotReply(interaction);
     });
 

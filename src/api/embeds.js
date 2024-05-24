@@ -1,7 +1,13 @@
 import { EmbedBuilder } from "discord.js";
 import { _utils } from "../index.js";
+
 import { AVATARS, LOCATIONS } from "../data/index.js";
 import { ERRORS } from "../errors/index.js";
+
+/* TODO: should be migrated out into handlers or some other file? ^ v */
+import { sendButton } from "./buttons.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 
 /**
@@ -38,7 +44,14 @@ export const sendSay = async (interaction) => {
 
     // TODO: test error cases...
     if (!charName) {
+        const { id } = interaction.member;
+
         // await interaction.reply({ content: ERRORS.NO_NAME, ephemeral: true });
+        if (id === process.env.MY_ID || id === process.env.ADMIN_ID) {
+            await sendButton(interaction);
+            return;
+        }
+
         await _utils.handleUserError(ERRORS.NO_NAME, interaction);
         return;
     }

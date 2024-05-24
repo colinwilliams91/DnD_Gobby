@@ -26,6 +26,15 @@ export class Utils {
     };
 
     /**
+     * @summary ensures user response to component (e.g. button) matches intended responder
+     * @param {object} interaction
+     * @returns filter callback for response.awaitMessageComponent({ filter: ..., time: 60_000 });
+     */
+    filterUserComponentResponse = async (interaction) => {
+      return (i) => i.user.id === interaction.user.id;
+    };
+
+    /**
      * @param {string} str full discord user name
      * @returns the extracted character name ("nickname") for the user
      */

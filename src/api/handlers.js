@@ -26,10 +26,6 @@ export class EventHandlers {
 
     }
 
-    logMessage = (message) => {
-        console.log(message);
-    };
-
     reactToMessage = (message) => {
         const emoji = this._utils.getRandomEmoji();
         message.react(emoji);

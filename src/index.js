@@ -104,7 +104,7 @@ client.on(Events.MessageCreate, (message) => {
 
   /* performance and payload loggers */
   if (process.env.NODE_ENV === "logging") {
-    _handlers.logMessage(message);
+    _utils.logger(message);
   }
 
   /* message sent in server from any user: */
@@ -118,8 +118,13 @@ client.on(Events.MessageCreate, (message) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
-  console.log(interaction);
+  // console.log(interaction);
   // console.log(interaction.commandName);
+
+  /* performance and payload loggers */
+  if (process.env.NODE_ENV === "logging") {
+    _utils.logger(interaction);
+  }
 
   try {
 
@@ -133,12 +138,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 
-client.login(process.env.TOKEN);
+//////////////////////////////////////////////////////////////
+/////////////// START ////////////////////////////////////////
 
-// interaction.member.user.displayName
-// interaction.member.user.globalName
-// const target = interaction.guild.members.
-// const target = interaction.member.displayName
+client.login(process.env.TOKEN);
 
 
 //////////////////////////////////////////////////////////////
@@ -147,3 +150,44 @@ client.login(process.env.TOKEN);
 process.on('unhandledRejection', error => {
   console.error('Unhandled promise rejection:', error);
 });
+
+
+//////////////////////////////////////////////////////////////
+/////////////// DISCORD API //////////////////////////////////
+
+// interaction.member.user.globalName
+// interaction.guild.members.
+
+// interaction.member
+// interaction.member.displayName
+// interaction.member.nickname
+// interaction.member.id
+// interaction.member.joinedAt
+// interaction.member.roles
+// interaction.member.permissions
+
+// interaction.isButton
+// interaction.isModalSubmit
+// interaction.isAnySelectMenu
+// interaction.isCommand
+// interaction.isChatInputCommand
+
+// interaction.entitlements
+
+// interaction.commandName
+// interaction.commandType
+// interaction.channel
+// interaction.channelId
+// interaction.createdAt
+// interaction.guildId
+
+// message.author
+// message.author.displayName
+// message.author.globalName
+// message.author.id
+// message.author.username
+
+// message.channelId
+// message.content
+// message.createdAt
+// message.guildId

@@ -107,11 +107,11 @@ export class Utils {
       } else if (payload.content) {
           /* _________________________
            *___ message author ______*/
-          const { displayName, globalName, id, username } = payload.author;
+          const { displayName, id, username } = payload.author;
 
           console.log(`\x1b[36m\x1b[0m`, `Message Author -- \n
               Display Name: ${displayName}\n
-              Global Name: ${globalName}\n
+              Global Name: ${payload.author.globalName || ""}\n
               Username: ${username}\n
               ID: ${id}`);
 

@@ -139,18 +139,27 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 
 //////////////////////////////////////////////////////////////
-/////////////// START ////////////////////////////////////////
-
-client.login(process.env.TOKEN);
-
-
-//////////////////////////////////////////////////////////////
 /////////////// ERRORS ///////////////////////////////////////
 
 process.on('unhandledRejection', error => {
-  console.error('Unhandled promise rejection:', error);
+  console.error(`\x1b[38;5;208m%s\x1b[0m`, 'Unhandled promise rejection:', error);
+
   return null;
 });
+
+process.on('uncaughtException', (err, origin) => {
+  const log = `Caught exception: ${err}\n` + `Exception origin: ${origin}\n`;
+
+  console.error(`\x1b[38;5;208m%s\x1b[0m`, log);
+
+  return null;
+});
+
+
+//////////////////////////////////////////////////////////////
+/////////////// START ////////////////////////////////////////
+
+client.login(process.env.TOKEN);
 
 
 //////////////////////////////////////////////////////////////

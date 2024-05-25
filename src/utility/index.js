@@ -61,49 +61,55 @@ export class Utils {
            *___ interaction author __*/
           const { displayName, id, joinedAt, nickname, permissions, roles } = payload.member;
 
-          console.log(`Author:
+          console.log(`\x1b[36m\x1b[0m`, `Author --
               \nDisplay Name/Nickname: ${displayName}/${nickname}
               \nID: ${id}
-              \nMember Since: ${joinedAt}
-              \nRoles:`);
-          roles.forEach(r => console.log(r));
+              \nMember Since: ${joinedAt}`);
+
+          console.log(`\nRoles:\n`);
+
+          if (roles.length)
+            roles.forEach(r => console.log(r));
+
           console.log(`\nPermissions:\n`);
-          permissions.forEach(p => console.log(p));
+
+          if (permissions.length)
+            permissions.forEach(p => console.log(p));
 
           /* _________________________
            *___ interaction type ____*/
-          const { isAnySelectMenu, isButton, isCommand, isChatInputCommand, isModalSubmit, entitlements } = payload;
+          console.log(`\x1b[34m\x1b[0m`, `Interaction Type --
+              \nisAnySelectMenu: ${payload.isAnySelectMenu()}
+              \nisButton: ${payload.isButton()}
+              \nisCommand: ${payload.isCommand()}
+              \nisChatInputCommand: ${payload.isChatInputCommand()}
+              \nisModalSubmit: ${payload.isModalSubmit()}`);
 
-          console.log(`Interaction Type:
-              \nisAnySelectMenu: ${isAnySelectMenu}
-              \nisButton: ${isButton}
-              \nisCommand: ${isCommand}
-              \nisChatInputCommand: ${isChatInputCommand}
-              \nisModalSubmit: ${isModalSubmit}`);
+          console.log(`\nInteraction Entitlements --\n`);
 
-          console.log(`Interaction Entitlements:`);
-          entitlements.forEach(e => console.log(e));
+          if (payload.entitlements.length)
+            entitlements.forEach(e => console.log(e));
 
           /* _________________________
            *___ interaction locale __*/
           const { commandName, commandType, channel, channelId, createdAt, guildId } = payload;
 
-          console.log(`Interaction Context:\n
-              Command Name: ${commandName}\n
-              Command Type: ${commandType}\n
-              Channel: ${channel}\n
-              Channel ID: ${channelId}\n
-              Guild ID: ${guildId}\n
-              Created At: ${createdAt}`);
+          console.log(`\x1b[34m\x1b[0m`, `Interaction Context --
+            \nCommand Name: ${commandName}
+            \nCommand Type: ${commandType}
+            \nChannel: ${channel}
+            \nChannel ID: ${channelId}
+            \nGuild ID: ${guildId}
+            \nCreated At: ${createdAt}`);
 
-          console.log(interaction);
+          console.log(payload);
 
       } else if (payload.content) {
           /* _________________________
            *___ message author ______*/
           const { displayName, globalName, id, username } = payload.author;
 
-          console.log(`Message Author -- \n
+          console.log(`\x1b[36m\x1b[0m`, `Message Author -- \n
               Display Name: ${displayName}\n
               Global Name: ${globalName}\n
               Username: ${username}\n
@@ -113,7 +119,7 @@ export class Utils {
            *___ message context _____*/
           const { channelId, content, createdAt, guildId } = payload;
 
-          console.log(`Message Context -- \n
+          console.log(`\x1b[34m\x1b[0m`, `Message Context -- \n
               Channel ID: ${channelId}\n
               Guild ID: ${guildId}\n
               Created At: ${createdAt}\n`);

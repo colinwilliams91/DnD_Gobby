@@ -149,6 +149,7 @@ client.login(process.env.TOKEN);
 
 process.on('unhandledRejection', error => {
   console.error('Unhandled promise rejection:', error);
+  return null;
 });
 
 

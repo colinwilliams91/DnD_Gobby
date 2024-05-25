@@ -51,58 +51,132 @@ export class Utils {
         return this._emojis[i];
     }
 
-    /**
-   * @param operation an async callback. wrap all business logic to test inside an anonymous arrow function.
-   * @constant `TIME.GOOD` (green) operation complete 1ms - 275ms
-   * @constant `TIME.OK` (yellow) operation complete 275ms - 350ms
-   * @constant `TIME.CONCERN` (orange) operation complete 350ms - 575ms
-   * @constant `TIME.BAD` (red) operation complete +576ms
-   *
-   * @example Utility.performanceLog(async () => {
-   *
-   *   const userDTO: DTO.User = this._userContext.mapUserDTO(user);
-   *   const userDoc: DocumentTypes.User = await this._userContext.findOrCreate(userDTO);
-   *
-   * });
-   */
-  performanceLog = async (operation) => {
-    /* constants */
-    const TIME = {
-      GOOD: 275,
-      OK: 350,
-      CONCERN: 575,
-      BAD: 556
-    };
+    /* ___________________________
+    ______ LOGGERS _______________
+    _____________________________ */
 
-    const COL = {
-      GOOD: "\x1b[32m%s\x1b[0m",
-      OK: "\x1b[33m%s\x1b[0m",
-      CONCERN: "\x1b[38;5;208m%s\x1b[0m",
-      BAD: "\x1b[31m%s\x1b[0m"
-    };
+    logger = (payload) => {
+      if (payload.isCommand) {
+          /* _________________________
+           *___ interaction author __*/
+          const { displayName, id, joinedAt, nickname, permissions, roles } = payload.member;
 
-    /* execution */
-    const startTime = performance.now();
-    await operation();
-    const endTime = performance.now();
+          console.log(`Author:
+              \nDisplay Name/Nickname: ${displayName}/${nickname}
+              \nID: ${id}
+              \nMember Since: ${joinedAt}
+              \nRoles:`);
+          roles.forEach(r => console.log(r));
+          console.log(`\nPermissions:\n`);
+          permissions.forEach(p => console.log(p));
 
-    /* computation */
-    const elapsedTime = endTime - startTime;
-    const log = `Execution time: ${elapsedTime.toFixed(2)} ms`;
+          /* _________________________
+           *___ interaction type ____*/
+          const { isAnySelectMenu, isButton, isCommand, isChatInputCommand, isModalSubmit, entitlements } = payload;
 
-    if (elapsedTime <= TIME.GOOD) {
-      console.log(COL.GOOD, log);
-      return;
-    } else if (elapsedTime <= TIME.OK) {
-      console.log(COL.OK, log);
-      return;
-    } else if (elapsedTime <= TIME.CONCERN) {
-      console.log(COL.CONCERN, log);
-      return;
-    } else {
-      console.log(COL.BAD, log);
-      return;
-    }
+          console.log(`Interaction Type:
+              \nisAnySelectMenu: ${isAnySelectMenu}
+              \nisButton: ${isButton}
+              \nisCommand: ${isCommand}
+              \nisChatInputCommand: ${isChatInputCommand}
+              \nisModalSubmit: ${isModalSubmit}`);
+
+          console.log(`Interaction Entitlements:`);
+          entitlements.forEach(e => console.log(e));
+
+          /* _________________________
+           *___ interaction locale __*/
+          const { commandName, commandType, channel, channelId, createdAt, guildId } = payload;
+
+          console.log(`Interaction Context:\n
+              Command Name: ${commandName}\n
+              Command Type: ${commandType}\n
+              Channel: ${channel}\n
+              Channel ID: ${channelId}\n
+              Guild ID: ${guildId}\n
+              Created At: ${createdAt}`);
+
+          console.log(interaction);
+
+      } else if (payload.content) {
+          /* _________________________
+           *___ message author ______*/
+          const { displayName, globalName, id, username } = payload.author;
+
+          console.log(`Message Author -- \n
+              Display Name: ${displayName}\n
+              Global Name: ${globalName}\n
+              Username: ${username}\n
+              ID: ${id}`);
+
+          /* _________________________
+           *___ message context _____*/
+          const { channelId, content, createdAt, guildId } = payload;
+
+          console.log(`Message Context -- \n
+              Channel ID: ${channelId}\n
+              Guild ID: ${guildId}\n
+              Created At: ${createdAt}\n`);
+          console.log(`Message Content: ${content}`);
+      }
   };
+
+  logMessage = (message) => console.log(message);
+
+  logInteraction = (interaction) => console.log(interaction);
+
+    /**
+     * @param operation an async callback. wrap all business logic to test inside an anonymous arrow function.
+     * @constant `TIME.GOOD` (green) operation complete 1ms - 275ms
+     * @constant `TIME.OK` (yellow) operation complete 275ms - 350ms
+     * @constant `TIME.CONCERN` (orange) operation complete 350ms - 575ms
+     * @constant `TIME.BAD` (red) operation complete +576ms
+     *
+     * @example Utility.performanceLog(async () => {
+     *
+     *   const userDTO: DTO.User = this._userContext.mapUserDTO(user);
+     *   const userDoc: DocumentTypes.User = await this._userContext.findOrCreate(userDTO);
+     *
+     * });
+     */
+    performanceLog = async (operation) => {
+      /* constants */
+      const TIME = {
+        GOOD: 275,
+        OK: 350,
+        CONCERN: 575,
+        BAD: 556
+      };
+
+      const COL = {
+        GOOD: "\x1b[32m%s\x1b[0m",
+        OK: "\x1b[33m%s\x1b[0m",
+        CONCERN: "\x1b[38;5;208m%s\x1b[0m",
+        BAD: "\x1b[31m%s\x1b[0m"
+      };
+
+      /* execution */
+      const startTime = performance.now();
+      await operation();
+      const endTime = performance.now();
+
+      /* computation */
+      const elapsedTime = endTime - startTime;
+      const log = `Execution time: ${elapsedTime.toFixed(2)} ms`;
+
+      if (elapsedTime <= TIME.GOOD) {
+        console.log(COL.GOOD, log);
+        return;
+      } else if (elapsedTime <= TIME.OK) {
+        console.log(COL.OK, log);
+        return;
+      } else if (elapsedTime <= TIME.CONCERN) {
+        console.log(COL.CONCERN, log);
+        return;
+      } else {
+        console.log(COL.BAD, log);
+        return;
+      }
+    };
 
 }

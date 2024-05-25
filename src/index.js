@@ -111,8 +111,9 @@ client.on(Events.MessageCreate, (message) => {
   console.log(`📌Discord message in channel ID: "${message.channelId}" from User: ${message.author.username} at ${message.createdAt}`);
 
   /* bot will react to any message sent provided channel ids */
-  _handlers.reactToMessage(message);
-
+  // _handlers.reactToMessage(message);
+  const emoji = _utils.getRandomEmoji();
+  message.react(emoji);
 
 });
 

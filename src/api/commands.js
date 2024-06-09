@@ -49,7 +49,7 @@ export const configureResponses = (responses) => {
         const orig = interaction.member.nickname;
         const id = interaction.member.user.id;
 
-        const name = `${orig} [${input}]`;
+        const name = `[${input}]`;
 
         /* cache user's orig name by user id */
         if (!users[id]) users[id] = orig;
@@ -60,7 +60,7 @@ export const configureResponses = (responses) => {
 
         console.log("~~TEST HERE~~");
         console.log(name);
-        await interaction.channel.send(`Hello ${name}! ${_utils.getRandomEmoji()}`);
+        await interaction.reply({ content: `Hello ${name}! ${_utils.getRandomEmoji()}`, ephemeral: true });
         await _utils.handleBotReply(interaction);
     });
 
@@ -93,7 +93,7 @@ export const configureResponses = (responses) => {
             .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
             .catch(console.error);
 
-        await interaction.channel.send(`See you next time ${orig}! ${_utils.getRandomEmoji()}`);
+        await interaction.reply({ content: `See you next time ${orig}! ${_utils.getRandomEmoji()}`, ephemeral: true });
         await _utils.handleBotReply(interaction);
     });
 

@@ -8,12 +8,32 @@ import { sendEmbed, sendSay } from "./embeds.js";
 // TODO: Make `/set arg...` route
 
 export const commands = [
-    new SlashCommandBuilder().setName("ping").setDescription("Replies with Pong!"),
-    new SlashCommandBuilder().setName("name").setDescription("Append your character name to your username!").addStringOption(x => x.setName("name").setDescription("should be able to name nick")),
-    new SlashCommandBuilder().setName("clear").setDescription("Resets to original username."),
-    new SlashCommandBuilder().setName("say").setDescription("Type what you want your character to say:").addStringOption(x => x.setName("message").setDescription("content")),
-    new SlashCommandBuilder().setName("initiative").setDescription("Roll for initiative")
+    new SlashCommandBuilder()
+        .setName("ping")
+        .setDescription("Replies with Pong!"),
+    new SlashCommandBuilder()
+        .setName("name")
+        .setDescription("Append your character name to your username!")
+        .addStringOption(x => x.setName("name")
+            .setDescription("should be able to name nick")),
+    new SlashCommandBuilder()
+        .setName("clear")
+        .setDescription("Resets to original username."),
+    new SlashCommandBuilder()
+        .setName("say")
+        .setDescription("Type what you want your character to say:")
+        .addStringOption(x => x.setName("message")
+            .setDescription("content")),
+    new SlashCommandBuilder()
+        .setName("initiative")
+        .setDescription("Rolls for initiative")
+        .addIntegerOption(x => x.setName("integer")
+            .setDescription("Provide your modifier between -5 and 10")
+            .setMinValue(-5)
+            .setMaxValue(10))
 ];
+
+// TODO: initiative range can be between -5 and +10
 
 // const responses = new Collection();
 

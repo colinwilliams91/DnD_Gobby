@@ -47,10 +47,11 @@ export const sendSay = async (interaction) => {
         const { id } = interaction.member;
 
         // await interaction.reply({ content: ERRORS.NO_NAME, ephemeral: true });
-        if (id === process.env.MY_ID || id === process.env.ADMIN_ID) {
-            await sendButton(interaction);
-            return;
-        }
+        /* was using this if block to test sending button... */
+        // if (id === process.env.MY_ID || id === process.env.ADMIN_ID) {
+        //     await sendButton(interaction);
+        //     return;
+        // }
 
         await _utils.handleUserError(ERRORS.NO_NAME, interaction);
         return;

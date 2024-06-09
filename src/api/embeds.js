@@ -75,10 +75,10 @@ export const sendSay = async (interaction) => {
         .setColor(0x00CC00)
         .setAuthor({ name: charName, iconURL: charAvatar })
         .setDescription(input)
-        .setThumbnail(AVATARS.get("Bot"))
-        .setImage(LOCATIONS.get("Crossroads"))
+        // .setThumbnail(AVATARS.get("Bot"))
+        // .setImage(LOCATIONS.get("Crossroads"))
         .setTimestamp()
-        .setFooter({ text: "What should go here... the weather?", iconURL: AVATARS.get("Bot") });
+        // .setFooter({ text: "What should go here... the weather?", iconURL: AVATARS.get("Bot") });
 
     await interaction.channel.send({ embeds: [ sayEmbed ] });
 };

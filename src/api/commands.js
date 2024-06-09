@@ -12,6 +12,7 @@ export const commands = [
     new SlashCommandBuilder().setName("name").setDescription("Append your character name to your username!").addStringOption(x => x.setName("name").setDescription("should be able to name nick")),
     new SlashCommandBuilder().setName("clear").setDescription("Resets to original username."),
     new SlashCommandBuilder().setName("say").setDescription("Type what you want your character to say:").addStringOption(x => x.setName("message").setDescription("content")),
+    new SlashCommandBuilder().setName("initiative").setDescription("Roll for initiative")
 ];
 
 // const responses = new Collection();
@@ -110,9 +111,43 @@ export const configureResponses = (responses) => {
         await _utils.handleBotReply(interaction);
     });
 
+    //////////////////////////////////////////////////////////////
+    ///////////////// initiative /////////////////////////////////
+
+    /**
+     * @summary /initiative
+     * @description rolls a d20 for character initiative
+     * and prepends to their char name in discord (also sorts by value in VC)
+     */
+    responses.set(commands[4].name, async (interaction) => {
+        const char = interaction.member.nickname;
+        const charName = _utils.extractNickname(char);
+
+        if (!charName) {
+            await _utils.handleUserError(ERRORS.NO_NAME, interaction);
+            return;
+            }
+
+        const hasInitiative = /\*/.test(nickname);
+        const _initiative = _utils.rollD20();
+        let patchName = "";
+
+        if (hasInitiative) {
+            patchName = str.replace(/\*(\d)/, `*${_initiative}`);
+        } else {
+            patchName = `*${_initiative} ${charName}`;
+        }
+
+        interaction.member.setNickname(patchName, "Prepend char current initiative to Nickname")
+            .then(member => console.log(`Set nickname of ${interaction.member.displayName}`))
+            .catch(console.error);
+
+        await interaction.reply({ content: `Hello ${name}! ${_utils.getRandomEmoji()}`, ephemeral: true });
+        await _utils.handleBotReply(interaction);
+
+    });
+
     return responses;
 };
-
-
 
 // export const api = responses;

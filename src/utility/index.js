@@ -43,13 +43,21 @@ export class Utils {
       return match ? match[1] : undefined;
     };
 
+    checkNicknameForInitiative(nickname) {
+      const hasAsterisk = /\*/.test(nickname);
+    };
+
     /**
      * @returns a random emoji from src/data/emojis.js
      */
     getRandomEmoji = () => {
         var i = Math.floor(Math.random() * (9 - 1) + 1);
         return this._emojis[i];
-    }
+    };
+
+    rollD20 = () => {
+        return Math.floor(20 * Math.random()) + 1;
+    };
 
     /* ___________________________
     ______ LOGGERS _______________

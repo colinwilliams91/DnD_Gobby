@@ -44,7 +44,7 @@ export const sendSay = async (interaction) => {
 
     // TODO: test error cases...
     if (!charName) {
-        const { id } = interaction.member;
+        // const { id } = interaction.member;
 
         // await interaction.reply({ content: ERRORS.NO_NAME, ephemeral: true });
         /* was using this if block to test sending button... */
